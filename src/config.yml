@@ -1,0 +1,9 @@
+DNSBLServers:
+ - "dnsbl.proxybl.org"
+ - "socks.dnsbl.sorbs.net"
+ - "misc.dnsbl.sorbs.net"
+ - "xbl.spamhaus.org"
+ - "cbl.abuseat.org"
+ - "dnsbl.njabl.org"
+ - "dnsbl.ahbl.org"
+ - "ircbl.ahbl.org"
