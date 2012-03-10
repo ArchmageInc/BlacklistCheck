@@ -1,6 +1,9 @@
 package com.archmageinc.BlacklistCheck;
 
 import java.io.File;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -40,6 +43,20 @@ public class BlacklistCheck extends JavaPlugin {
 	public void logMessage(String msg){
 		PluginDescriptionFile pdFile	=	this.getDescription();
 		log.info("["+pdFile.getName()+" "+pdFile.getVersion()+"]: "+msg);
+	}
+	
+	public boolean isWhitelisted(InetAddress ip){
+		reloadConfig();
+		List<String> whitelist	=	getConfig().getStringList("Whitelist");
+		if((ip instanceof Inet4Address)){
+			String ips	=	((Inet4Address) ip).toString().replaceAll("/","");
+			if(whitelist.contains(ips)){
+				logMessage("Address "+ip.toString()+" is whitelisted.");
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 }

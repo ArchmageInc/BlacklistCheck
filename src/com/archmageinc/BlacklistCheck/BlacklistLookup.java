@@ -18,6 +18,8 @@ public class BlacklistLookup {
 	
 	public boolean isBlacklisted(InetAddress ip){
 		plugin.logMessage("Checking address "+ip.toString()+" against blacklist servers");
+		if(plugin.isWhitelisted(ip))
+			return false;
 		
 		if(!(ip instanceof Inet4Address))
 			return false;

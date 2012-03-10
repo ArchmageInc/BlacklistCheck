@@ -7,3 +7,5 @@ DNSBLServers:
  - "dnsbl.njabl.org"
  - "dnsbl.ahbl.org"
  - "ircbl.ahbl.org"
+Whitelist:
+ - "127.0.0.1"
