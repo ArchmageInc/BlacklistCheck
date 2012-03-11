@@ -1,3 +1,4 @@
+Debug: false
 DNSBLServers:
  - "dnsbl.proxybl.org"
  - "socks.dnsbl.sorbs.net"
@@ -8,4 +9,4 @@ DNSBLServers:
  - "dnsbl.ahbl.org"
  - "ircbl.ahbl.org"
 Whitelist:
- - "127.0.0.1"
+ - "127.0.0.1/32"
