@@ -19,6 +19,7 @@ public class BlacklistLookup {
 	public boolean isBlacklisted(InetAddress ip){
 		if(plugin.getConfig().getBoolean("Debug"))
 			plugin.logMessage("Checking address "+ip.toString()+" against blacklist servers");
+		
 		if(plugin.isWhitelisted(ip))
 			return false;
 		
@@ -33,8 +34,12 @@ public class BlacklistLookup {
 		String reversed	=	parts[3]+"."+parts[2]+"."+parts[1]+"."+parts[0];
 		for(String DNSBLServer : DNSBLServers){
 			try {
+				if(plugin.getConfig().getBoolean("Debug"))
+					plugin.logMessage("Checking DNSEntry: "+reversed+"."+DNSBLServer);
+				
 				if(InetAddress.getByName(reversed+"."+DNSBLServer)!=null)
 					return true;
+				
 			} catch (UnknownHostException e) {}
 		}
 		return false;

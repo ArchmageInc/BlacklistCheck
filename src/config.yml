@@ -1,5 +1,7 @@
 Debug: false
 LogDisconnects: true
+DelayCheck: false
+DisconnectMessage: "Connected from a publicly blacklisted server!"
 DNSBLServers:
  - "dnsbl.proxybl.org"
  - "socks.dnsbl.sorbs.net"

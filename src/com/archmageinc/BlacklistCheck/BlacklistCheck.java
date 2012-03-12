@@ -14,12 +14,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class BlacklistCheck extends JavaPlugin {
 
 	private Logger log				=	Logger.getLogger("Minecraft");
+	private BlacklistLookup BLL;
 	
 	@Override
 	public void onEnable(){
 		initialConfigCheck();
 		getDNSBLServers();
 		getServer().getPluginManager().registerEvents(new BlacklistListener(this), this);
+		BLL	=	new BlacklistLookup(this);
 		logMessage("Enabled");
 	}
 	
@@ -36,6 +38,7 @@ public class BlacklistCheck extends JavaPlugin {
 	}
 	
 	private void initialConfigCheck(){
+		getConfig().options().copyDefaults(true);
 		if(!(new File(this.getDataFolder(),"config.yml").exists())){
 			this.logMessage("Saving default configuration file.");
 			this.saveDefaultConfig();
@@ -59,21 +62,25 @@ public class BlacklistCheck extends JavaPlugin {
 			String ips	=	((Inet4Address) ip).toString().replaceAll("/","");
 			if(getConfig().getBoolean("Debug"))
 				logMessage("Checking "+ips+" against the whitelist.");
+			
 			Iterator<String> itr	=	whitelist.iterator();
 			while(itr.hasNext()){
 				String subnet	=	itr.next();
 				try{
 					if(getConfig().getBoolean("Debug"))
 						logMessage("Checking "+ips+" against whitelist entry "+subnet);
+					
 					SubnetUtils util	=	new SubnetUtils(subnet);
 					if(util.getInfo().getAddressCount()==0 && util.getInfo().getNetworkAddress().equals(ips)){
 						if(getConfig().getBoolean("Debug"))
 							logMessage("Address "+ips+" is whitelisted.");
+						
 						return true;
 					}
 					if(util.getInfo().isInRange(ips)){
 						if(getConfig().getBoolean("Debug"))
-							logMessage("Address "+ips+" is whitelisted.");
+							logMessage("Address "+ips+" is in a whitelisted subnet: "+subnet);
+						
 						return true;
 					}
 				}catch(IllegalArgumentException e){
@@ -82,9 +89,14 @@ public class BlacklistCheck extends JavaPlugin {
 			}
 			if(getConfig().getBoolean("Debug"))
 				logMessage(ips+" is not whitelisted.");
+			
 		}
 		
 		return false;
+	}
+	
+	public boolean isBlacklisted(InetAddress ip){
+		return BLL.isBlacklisted(ip);
 	}
 	
 }
