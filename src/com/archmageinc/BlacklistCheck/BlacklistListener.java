@@ -9,7 +9,6 @@ import org.bukkit.event.player.PlayerPreLoginEvent.Result;
 public class BlacklistListener implements Listener {
 	
 	private BlacklistLookup BLL;
-	@SuppressWarnings("unused")
 	private BlacklistCheck plugin;
 	
 	public BlacklistListener(BlacklistCheck plugin){
@@ -21,6 +20,8 @@ public class BlacklistListener implements Listener {
 	public void onPlayerPreLoginEvent(PlayerPreLoginEvent event){
 		if(BLL.isBlacklisted(event.getAddress())){
 			event.setKickMessage("Connected from a publicly blacklisted server!");
+			if(plugin.getConfig().getBoolean("LogDisconnects"))
+				plugin.logMessage(event.getAddress().toString()+" has been blocked from connecting (DNSBL address)");
 			event.setResult(Result.KICK_OTHER);
 		}
 	}

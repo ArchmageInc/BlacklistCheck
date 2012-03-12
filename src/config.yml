@@ -1,4 +1,5 @@
 Debug: false
+LogDisconnects: true
 DNSBLServers:
  - "dnsbl.proxybl.org"
  - "socks.dnsbl.sorbs.net"
