@@ -23,13 +23,18 @@ public class BlacklistLookup {
 		if(plugin.isWhitelisted(ip))
 			return false;
 		
-		if(!(ip instanceof Inet4Address))
+		if(!(ip instanceof Inet4Address)){
+			if(plugin.getConfig().getBoolean("Debug"))
+				plugin.logMessage("Unsupported IPv6 address, not checking blacklist.");
 			return false;
+		}
 		
 		String[] parts	=	((Inet4Address) ip).toString().replaceAll("/","") .split("\\.");
 		
-		if(parts.length!=4)
+		if(parts.length!=4){
+			plugin.logWarning("Unable to parse IP address: "+ip.toString()+" unable to check blacklist.");
 			return false;
+		}
 		
 		String reversed	=	parts[3]+"."+parts[2]+"."+parts[1]+"."+parts[0];
 		for(String DNSBLServer : DNSBLServers){
