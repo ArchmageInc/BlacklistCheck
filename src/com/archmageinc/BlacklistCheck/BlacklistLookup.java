@@ -29,6 +29,11 @@ public class BlacklistLookup {
 			return false;
 		}
 		
+		if(DNSBLServers==null){
+			plugin.logWarning("Missing DNSBLServers list configuration! Unable to lookup address!");
+			return false;
+		}
+		
 		String[] parts	=	((Inet4Address) ip).toString().replaceAll("/","") .split("\\.");
 		
 		if(parts.length!=4){
@@ -45,7 +50,10 @@ public class BlacklistLookup {
 				if(InetAddress.getByName(reversed+"."+DNSBLServer)!=null)
 					return true;
 				
-			} catch (UnknownHostException e) {}
+			} catch (UnknownHostException e) {
+				if(plugin.getConfig().getBoolean("Debug"))
+					plugin.logMessage("No Blacklist result: "+reversed+"."+DNSBLServer);
+			}
 		}
 		return false;
 		
