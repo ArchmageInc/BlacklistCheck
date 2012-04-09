@@ -17,6 +17,9 @@ public class BlacklistLookup {
 	}
 	
 	public boolean isBlacklisted(InetAddress ip){
+		if(ip==null)
+			plugin.logWarning("Unable to check a player's address because the player's address could not be found!");
+		
 		if(plugin.getConfig().getBoolean("Debug"))
 			plugin.logMessage("Checking address "+ip.toString()+" against blacklist servers");
 		

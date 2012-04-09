@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BlacklistCheck extends JavaPlugin {
 
-	private Logger log				=	Logger.getLogger("Minecraft");
+	private Logger log				=	getLogger();
 	private BlacklistLookup BLL;
 	
 	@Override

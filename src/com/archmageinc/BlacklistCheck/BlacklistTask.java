@@ -14,12 +14,16 @@ public class BlacklistTask extends TimerTask  {
 	public BlacklistTask(BlacklistCheck instance,Player p){
 		plugin		=	instance;
 		player		=	p;
-		IP			=	player.getAddress().getAddress();
+		if(player!=null && player.getAddress()!=null)
+			IP			=	player.getAddress().getAddress();
+		
+		else
+			plugin.logWarning("Unable to determine if a Player's address is blacklisted because the player's address could not be found!");
 	}
 	
 	@Override
 	public void run() {
-		if(player!=null && plugin.isBlacklisted(IP)){
+		if(player!=null && IP!=null && plugin.isBlacklisted(IP)){
 			if(plugin.getConfig().getBoolean("LogDisconnects"))
 				plugin.logMessage(IP.toString()+" has been kicked (DNSBL address)");
 			
