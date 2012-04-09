@@ -1,4 +1,4 @@
 name: BlacklistCheck
 main: com.archmageinc.BlacklistCheck.BlacklistCheck
-version: 0.5
+version: 0.5.1
 description: Checks new logins against DNSBL servers and blocks them from connecting
