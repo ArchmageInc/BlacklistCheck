@@ -34,7 +34,7 @@ public class BlacklistListener implements Listener {
 		if(!plugin.getConfig().getBoolean("DelayCheck"))
 			return;
 		
-		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new BlacklistTask(plugin,event.getPlayer()));
+		plugin.getServer().getScheduler().scheduleAsyncDelayedTask(plugin, new BlacklistTask(plugin,event.getPlayer()),30);
 	}
 
 }

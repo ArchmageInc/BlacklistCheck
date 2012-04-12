@@ -13,15 +13,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class BlacklistCheck extends JavaPlugin {
 
-	private Logger log				=	getLogger();
+	private Logger log;
 	private BlacklistLookup BLL;
 	
 	@Override
 	public void onEnable(){
+		log				=	getLogger();
 		initialConfigCheck();
 		getDNSBLServers();
-		getServer().getPluginManager().registerEvents(new BlacklistListener(this), this);
 		BLL	=	new BlacklistLookup(this);
+		getServer().getPluginManager().registerEvents(new BlacklistListener(this), this);
 		logMessage("Enabled");
 	}
 	
