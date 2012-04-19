@@ -20,15 +20,23 @@ public class BlacklistLookup {
 		if(ip==null)
 			plugin.logWarning("Unable to check a player's address because the player's address could not be found!");
 		
-		if(plugin.getConfig().getBoolean("Debug"))
-			plugin.logMessage("Checking address "+ip.toString()+" against blacklist servers");
+		if(plugin.getConfig().getBoolean("Debug")){
+			if(plugin.getConfig().getBoolean("LogToFile"))
+				plugin.logToFile("Checking address "+ip.toString()+" against blacklist servers");
+			else
+				plugin.logMessage("Checking address "+ip.toString()+" against blacklist servers");
+		}
 		
 		if(plugin.isWhitelisted(ip))
 			return false;
 		
 		if(!(ip instanceof Inet4Address)){
-			if(plugin.getConfig().getBoolean("Debug"))
-				plugin.logMessage("Unsupported IPv6 address, not checking blacklist.");
+			if(plugin.getConfig().getBoolean("Debug")){
+				if(plugin.getConfig().getBoolean("LogToFile"))
+					plugin.logToFile("Unsupported IPv6 address, not checking blacklist.");
+				else
+					plugin.logMessage("Unsupported IPv6 address, not checking blacklist.");
+			}
 			return false;
 		}
 		
@@ -47,15 +55,24 @@ public class BlacklistLookup {
 		String reversed	=	parts[3]+"."+parts[2]+"."+parts[1]+"."+parts[0];
 		for(String DNSBLServer : DNSBLServers){
 			try {
-				if(plugin.getConfig().getBoolean("Debug"))
-					plugin.logMessage("Checking DNSEntry: "+reversed+"."+DNSBLServer);
+				if(plugin.getConfig().getBoolean("Debug")){
+					if(plugin.getConfig().getBoolean("LogToFile"))
+						plugin.logToFile("Checking DNSEntry: "+reversed+"."+DNSBLServer);
+					else
+						plugin.logMessage("Checking DNSEntry: "+reversed+"."+DNSBLServer);
+				}
 				
 				if(InetAddress.getByName(reversed+"."+DNSBLServer)!=null)
 					return true;
 				
 			} catch (UnknownHostException e) {
-				if(plugin.getConfig().getBoolean("Debug"))
-					plugin.logMessage("No Blacklist result: "+reversed+"."+DNSBLServer);
+				if(plugin.getConfig().getBoolean("Debug")){
+					
+					if(plugin.getConfig().getBoolean("LogToFile"))
+						plugin.logToFile("No Blacklist result: "+reversed+"."+DNSBLServer);
+					else
+						plugin.logMessage("No Blacklist result: "+reversed+"."+DNSBLServer);
+				}
 			}
 		}
 		return false;

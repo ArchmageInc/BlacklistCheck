@@ -1,6 +1,9 @@
 package com.archmageinc.BlacklistCheck;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.util.Iterator;
@@ -43,6 +46,12 @@ public class BlacklistCheck extends JavaPlugin {
 		if(!(new File(this.getDataFolder(),"config.yml").exists())){
 			this.logMessage("Saving default configuration file.");
 			this.saveDefaultConfig();
+		}else{
+			try {
+				getConfig().save(new File(getDataFolder(),"config.yml"));
+			} catch (IOException e) {
+				logWarning("Unable to save configuration file!");
+			}
 		}
 	}
 	
@@ -56,31 +65,58 @@ public class BlacklistCheck extends JavaPlugin {
 		log.warning("["+pdFile.getName()+" "+pdFile.getVersion()+"]: "+msg);
 	}
 	
+	public void logToFile(String msg){
+		try {
+			BufferedWriter writer		=	new BufferedWriter(new FileWriter(new File(getDataFolder(),"BlacklistCheck.log"),true));
+			writer.write(msg);
+			writer.newLine();
+			writer.close();
+		}catch (java.io.IOException e) {
+			logMessage("Unable to write to BlacklistCheck.log: "+e.getMessage());
+		}
+	}
+	
 	public boolean isWhitelisted(InetAddress ip){
 		reloadConfig();
 		List<String> whitelist	=	getConfig().getStringList("Whitelist");
 		if((ip instanceof Inet4Address)){
 			String ips	=	((Inet4Address) ip).toString().replaceAll("/","");
-			if(getConfig().getBoolean("Debug"))
-				logMessage("Checking "+ips+" against the whitelist.");
+			if(getConfig().getBoolean("Debug")){
+				if(getConfig().getBoolean("LogToFile"))
+					logToFile("Checking "+ips+" against the whitelist.");
+				else
+					logMessage("Checking "+ips+" against the whitelist.");
+			}
 			
 			Iterator<String> itr	=	whitelist.iterator();
 			while(itr.hasNext()){
 				String subnet	=	itr.next();
 				try{
-					if(getConfig().getBoolean("Debug"))
-						logMessage("Checking "+ips+" against whitelist entry "+subnet);
+					if(getConfig().getBoolean("Debug")){
+						if(getConfig().getBoolean("LogToFile"))
+							logToFile("Checking "+ips+" against whitelist entry "+subnet);
+						else
+							logMessage("Checking "+ips+" against whitelist entry "+subnet);
+					}
 					
 					SubnetUtils util	=	new SubnetUtils(subnet);
 					if(util.getInfo().getAddressCount()==0 && util.getInfo().getNetworkAddress().equals(ips)){
-						if(getConfig().getBoolean("Debug"))
-							logMessage("Address "+ips+" is whitelisted.");
+						if(getConfig().getBoolean("Debug")){
+							if(getConfig().getBoolean("LogToFile"))
+								logToFile("Address "+ips+" is whitelisted.");
+							else
+								logMessage("Address "+ips+" is whitelisted.");
+						}
 						
 						return true;
 					}
 					if(util.getInfo().isInRange(ips)){
-						if(getConfig().getBoolean("Debug"))
-							logMessage("Address "+ips+" is in a whitelisted subnet: "+subnet);
+						if(getConfig().getBoolean("Debug")){
+							if(getConfig().getBoolean("LogToFile"))
+								logToFile("Address "+ips+" is in a whitelisted subnet: "+subnet);
+							else
+								logMessage("Address "+ips+" is in a whitelisted subnet: "+subnet);
+						}
 						
 						return true;
 					}
@@ -88,8 +124,12 @@ public class BlacklistCheck extends JavaPlugin {
 					logWarning("Misconfiguration for whitelisted subnet "+subnet+". Invalid CIDR Notation");
 				}
 			}
-			if(getConfig().getBoolean("Debug"))
-				logMessage(ips+" is not whitelisted.");
+			if(getConfig().getBoolean("Debug")){
+				if(getConfig().getBoolean("LogToFile"))
+					logToFile(ips+" is not whitelisted.");
+				else
+					logMessage(ips+" is not whitelisted.");
+			}
 			
 		}
 		

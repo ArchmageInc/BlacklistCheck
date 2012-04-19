@@ -22,8 +22,12 @@ public class BlacklistListener implements Listener {
 		
 		if(plugin.isBlacklisted(event.getAddress())){
 			event.setKickMessage(plugin.getConfig().getString("DisconnectMessage"));
-			if(plugin.getConfig().getBoolean("LogDisconnects"))
-				plugin.logMessage(event.getAddress().toString()+" has been blocked from connecting (DNSBL address)");
+			if(plugin.getConfig().getBoolean("LogDisconnects")){
+				if(plugin.getConfig().getBoolean("LogToFile"))
+					plugin.logToFile(event.getAddress().toString()+" has been blocked from connecting (DNSBL address)");
+				else
+					plugin.logMessage(event.getAddress().toString()+" has been blocked from connecting (DNSBL address)");
+			}
 			
 			event.setResult(Result.KICK_OTHER);
 		}
